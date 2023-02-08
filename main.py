@@ -12,12 +12,29 @@ image_path = "text.png"
 
 
 # Opening the image & storing it in an image object
-img = Image.open(image_path).convert("L")
-gray = ImageOps.grayscale(img)
+img = Image.open(image_path).convert("LA")
 
-# Increase the contrast of the image
-contrast = ImageOps.autocontrast(gray, cutoff=0)
-img = ImageOps.autocontrast(img)
+# multiply each pixel by 1.2
+img = img.point(lambda i: i * 1.3)
+
+# enh = ImageEnhance.Contrast(out)
+# enh.enhance(1.3).show("30% more contrast")
+
+pixels = img.getdata()
+
+newPixels = []
+# Compare each pixel 
+for pixel in pixels:
+    if pixel < threshold:
+        newPixels.append(black)
+    else:
+        newPixels.append(white)
+
+# Create and save new image.
+img = Image.new("RGB",img.size)
+img.putdata(newPixels)
+img.save("result.jpg")
+
 
 # Providing the tesseract executable
 # location to pytesseract library
